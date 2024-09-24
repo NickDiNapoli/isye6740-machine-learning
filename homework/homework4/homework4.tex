@@ -1,0 +1,154 @@
+\documentclass[twoside,10pt]{article}
+\usepackage{amsmath,amsfonts,amsthm,fullpage,amssymb}
+%\usepackage{mymath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{url}
+
+
+\begin{document}
+
+\title{ISYE 6740, Fall 2021, Homework 4\\ 
+  100 points + 5 bonus points }
+\date{}
+\maketitle
+
+%----------------------------------------------------------------------------------
+
+
+\subsection*{\bf 1. Optimization (20 points).}
+
+Consider a simplified logistic regression problem. 
+Given $m$ training samples $(x^i, y^i)$, $i = 1, \ldots, m$. The data $x^i \in \mathbb R$ (note that we only have one feature for each sample), and $y^i \in \{0, 1\}$.  To fit a logistic regression model for classification, we solve the following optimization problem, where $\theta \in \mathbb R$ is a parameter we aim to find:
+\begin{equation}
+\max_\theta \ell (\theta), \label{eqn}
+\end{equation}
+where the log-likelhood function \[\ell(\theta) = \sum_{i=1}^m \left\{-\log (1+\exp\{-\theta x^i\}) + (y^i-1) \theta x^i\right\}.\]
+
+\begin{enumerate}
+\item (5 points) Show step-by-step mathematical derivation for the gradient of the cost function $\ell(\theta)$ in (\ref{eqn}).
+\item (5 points) Write a pseudo-code  for performing {\bf gradient descent} to find the optimizer $\theta^*$. This is essentially what the training procedure does. 
+\item (5 points) Write the pseudo-code for performing the {\bf stochastic gradient descent} algorithm to solve the training of logistic regression problem (\ref{eqn}). Please explain the difference between gradient descent and stochastic gradient descent for training logistic regression.
+\item (5 points) We will {\bf show that the training problem in basic logistic regression problem is concave.} Derive the Hessian matrix of $\ell(\theta)$ and based on this, show the training problem (\ref{eqn}) is concave (note that in this case, since we only have one feature, the Hessian matrix is just a scalar). Explain why the problem can be solved efficiently and gradient descent will achieve a unique global optimizer, as we discussed in class. 
+\end{enumerate}
+
+
+\subsection*{\bf 2. Comparing classifiers. (40 points)}
+
+In lectures, we learn different classifiers. This question is compare them on two datasets. Python users, please feel free to use \textsf{Scikit-learn}, which is a commonly-used and powerful \textsf{Python} library with various machine learning tools. But you can also use other similar libraries in other languages of your choice to perform the tasks.
+
+\begin{enumerate}
+
+
+\item{Part One (Divorce classification/prediction).} 
+
+This dataset is about participants who completed the personal information form and a divorce predictors scale.  The data is a modified version of the publicly available at  \url{https://archive.ics.uci.edu/ml/datasets/Divorce+Predictors+data+set} (by injecting noise so you will not get the exactly same results as on UCI website).  The dataset \textbf{marriage.csv} is contained in the homework folder. There are 170 participants and 54 attributes (or predictor variables) that are all real-valued. The last column of the CSV file is label $y$ (1 means ``divorce'', 0 means ``no divorce''). Each column is for one feature (predictor variable), and each row is a sample (participant). A detailed explanation for each feature (predictor variable) can be found at the website link above. Our goal is to build a classifier using training data, such that given a test sample, we can classify (or essentially predict) whether its label is 0 (``no divorce'') or 1 (``divorce''). 
+
+We are going to compare the following classifiers  ({\bf Naive Bayes, Logistic Regression, and KNN}). Use the first $80\%$ data for training and the remaining $20\%$ for testing. If you use \textsf{scikit-learn} you can use \textsf{train\_test\_split} to split the dataset. 
+
+\textit{Remark: Please note that, here, for Naive Bayes, this means that we have to estimate the variance for each individual feature from training data. When estimating the variance, if the variance is zero to close to zero (meaning that there is very little variability in the feature), you can set the variance to be a small number, e.g., $\epsilon = 10^{-3}$. We do not want to have include zero or nearly variance in Naive Bayes. This tip holds for both Part One and Part Two of this question.}
+
+
+\begin{enumerate}
+
+	\item (10 points) Report testing accuracy for each of the three classifiers.  Comment on their performance: which performs the best and make a guess why they perform the best in this setting. 
+	\item (10 points) Now perform PCA to project the data into two-dimensional space. Build the classifiers  ({\bf Naive Bayes, Logistic Regression, and KNN}) using the two-dimensional PCA results. Plot the data points and decision boundary of each classifier in the two-dimensional space. Comment on the difference between the decision boundary for the three classifiers. Please clearly represent the data points with different labels using different colors.
+	
+\end{enumerate}
+
+
+
+
+\item{Part Two (Handwritten digits classification).} 
+
+This question is to compare different classifiers and their performance for multi-class classifications on the complete MNIST dataset at \url{http://yann.lecun.com/exdb/mnist/}. You can find the data file \textbf{mnist\_10digits.mat} in the homework folder. The MNIST database of handwritten digits has a training set of 60,000 examples, and a test set of 10,000 examples. We will compare {\bf KNN, logistic regression, SVM, kernel SVM, and  neural networks}. 
+
+\begin{itemize}
+
+\item We suggest you to ``standardize'' the features before training the classifiers, by dividing the values of the features by 255 (thus map the range of the features from [0, 255] to [0, 1]).
+
+\item You may adjust the number of neighbors $K$ used in KNN to have a reasonable result (you may use cross validation but it is not required; any reasonable tuning to get good result is acceptable).
+
+\item You may use a neural networks function \textsf{sklearn.neural\_network} with \textsf{hidden\_layer\_sizes = (20, 10)}. 
+
+
+\item For kernel SVM, you may use  radial basis function kernel and choose proper kernel.
+
+\item For KNN and SVM, you can randomly downsample the training data to size $m=5000$, to improve computation efficiency. 
+\end{itemize}
+
+Train the classifiers on training dataset and evaluate on the test dataset.
+
+\begin{enumerate}
+
+	\item (15 points) Report confusion matrix, precision, recall, and F-1 score for each of the classifiers. For precision, recall, and F-1 score of each classifier, we will  need to report these for each of the digits. So you can create a table for this. For this question, each of the 5 classifier, {\bf KNN, logistic regression, SVM, kernel SVM, and  neural networks}, accounts for 10 points.
+	\item (5 points) Comment on the performance of the classifier and give your explanation why some of them perform better than the others.	
+\end{enumerate}
+
+
+
+\end{enumerate}
+
+
+\subsection*{\bf 3. Naive Bayes for spam filtering. (40 points)} 
+
+In this problem, we will use the Naive Bayes algorithm to fit a spam filter by hand. This will enhance your understanding to Bayes classifier and build intuition. This question does not involve any programming but only derivation and hand calculation. 
+
+Spam filters are used in all email services to classify received emails as ``Spam'' or ``Not Spam''. A simple approach involves maintaining a vocabulary of words that commonly occur in ``Spam'' emails and classifying an email as ``Spam'' if the number of words from the dictionary that are present in the email is over a certain threshold.
+We are given the vocabulary consists of 15 words \[V=\{\textsf{secret, offer, low, price, valued, customer, today, dollar, million, sports, is, for, play, healthy, pizza}\}.\] We will use $V_i$ to represent the $i$th word in $V$. As our training dataset, we are also given 3 example spam messages,
+\begin{itemize}
+\item \textsf{million dollar offer}
+\item \textsf{secret offer today}
+\item \textsf{secret is secret}
+\end{itemize}
+and 4 example non-spam messages
+\begin{itemize}
+\item \textsf{low price for valued customer}
+\item \textsf{play secret sports today}
+\item \textsf{sports is healthy}
+\item \textsf{low price pizza}
+\end{itemize}
+
+Recall that the Naive Bayes classifier assumes the probability of an input depends on its input feature. The feature for each sample is defined as
+$x^{(i)} = [x_1^{(i)}, x_2^{(i)}, \ldots, x_d^{(i)}]^T$, $i = 1, \ldots, m$ and the class of the $i$th sample is $y^{(i)}$. In our case the length of the input vector is $d = 15$, which is equal to the number of words in the vocabulary $V$. Each entry $x_j^{(i)}$ is equal to the number of times word $V_j$ occurs in the $i$-th message. 
+
+\begin{enumerate}
+\item (10 points) Calculate class prior $\mathbb P(y = 0)$ and $\mathbb P(y = 1)$ from the training data, where $y = 0$ corresponds to spam messages, and $y = 1$ corresponds to non-spam messages. Note that these class prior essentially corresponds to the frequency of each class in the training sample. Write down the feature vectors for each spam and non-spam messages.
+\item (15 points) In the Naive Bayes model, assuming the keywords are independent of each other (this is a simplification), the likelihood of a sentence with its feature vector $x$ given a class $c$ is given by 
+\[
+\mathbb P (x|y = c) = \prod_{k=1}^d \theta_{c, k}^{x_k}, \quad c = \{0, 1\}
+\]
+where $0 \leq \theta_{c,k} \leq 1$ is the probability of word $k$ appearing in class $c$, which satisfies 
+\[\sum_{k=1}^d \theta_{c,k} = 1, \quad c = \{0, 1\}.\] Given this, the complete log-likelihood function for our training data is given by
+\[
+\ell(\theta_{0,1}, \ldots, \theta_{0, d}, \theta_{1,1}, \ldots, \theta_{1, d}) = 
+\sum_{i=1}^m \sum_{k=1}^d x_k^{(i)} \log \theta_{y^{(i)}, k}
+\]
+(In this example, $m = 7$.)
+ Calculate the maximum likelihood estimates of $\theta_{0,1}$, $\theta_{0,7}$, $\theta_{1,1}$, $\theta_{1,15}$ by maximizing the log-likelihood function above.\\
+ (Hint: We are solving a constrained maximization problem and you will need to introduce Lagrangian multipliers and consider the Lagrangian function.)
+\item (15 points) Given a test message ``\textsf{today is secret}'', using the Naive Bayes classier that you have trained in Part (a)-(b), to calculate the posterior and decide whether it is spam or not spam.
+
+\end{enumerate}
+
+
+
+\subsection*{\bf 4. Neural networks. (Bonus: 5 points)}
+
+
+Consider a simple two-layer network in the lecture slides. Given $n$ training data $(x^i, y^i)$, $i = 1, \ldots, n$, the cost function used to training the neural networks
+\[
+\ell(w, \alpha, \beta) = \sum_{i=1}^n (y^i - \sigma(w^T z^i))^2
+\]
+where $\sigma (x) = 1/(1+e^{-x})$ is the sigmoid function, $z^i$ is a two-dimensional vector such that  $z_1^i = \sigma(\alpha^T x^i)$, and $z_2^i = \sigma(\beta^T x^i)$. Show the that the gradient is given by
+\[
+\frac{\partial \ell(w, \alpha, \beta) }{\partial w}
+= - \sum_{i=1}^n 2(y^i - \sigma(u^i))\sigma(u^i)(1-\sigma(u^i)) z^i,
+\]
+where $u^i = w^T z^i$. Also show the gradient of $\ell(w, \alpha, \beta)$ with respect to $\alpha$ and $\beta$ and write down their expression.
+
+
+
+
+\end{document}
